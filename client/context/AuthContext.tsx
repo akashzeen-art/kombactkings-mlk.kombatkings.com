@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, ReactNode } from 'react';
 
 const PID = 19;
-const BASE = import.meta.env.DEV ? '/api-proxy' : 'http://143.198.213.74';
+const BASE = '/api-proxy';
 const LOGIN_API = `${BASE}/prod/CPLogin/ULKM`;
 const UNSUB_API = `${BASE}/prod/ULKM/unsub`;
 
@@ -49,7 +49,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       localStorage.setItem('kk_user', JSON.stringify(activeUser));
       return { success: true };
     } else {
-      let redirectURL = `http://143.198.213.74/prod/LP/landing?creatid=179&hash=LKMKK`;
+      let redirectURL = `/api-proxy/prod/LP/landing?creatid=179&hash=LKMKK`;
       return { success: false, redirectURL };
     }
   };
