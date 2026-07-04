@@ -34,8 +34,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const isActive = !!user;
 
   useEffect(() => {
+    if (user) return;
+
+    // Check ?msisdn= in URL first
+    const params = new URLSearchParams(window.location.search);
+    const urlMsisdn = params.get('msisdn');
+    if (urlMsisdn) {
+      login(urlMsisdn).then((result) => {
+        if (result.success) {
+          // Clean msisdn from URL without reload
+          const url = new URL(window.location.href);
+          url.searchParams.delete('msisdn');
+          window.history.replaceState({}, '', url.toString());
+        }
+      });
+      return;
+    }
+
+    // Fallback: check pending msisdn in localStorage
     const pending = localStorage.getItem(PENDING_MSISDN_KEY);
-    if (pending && !user) {
+    if (pending) {
       login(pending).then((result) => {
         if (result.success) localStorage.removeItem(PENDING_MSISDN_KEY);
       });
