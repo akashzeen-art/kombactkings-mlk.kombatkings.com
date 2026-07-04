@@ -17,6 +17,7 @@ import MMAFight from "./pages/MMAFight";
 import Taekwondo from "./pages/Taekwondo";
 import Kickboxing from "./pages/Kickboxing";
 import MyAccount from "./pages/MyAccount";
+import Callback from "./pages/Callback";
 
 const queryClient = new QueryClient();
 
@@ -43,6 +44,7 @@ const App = () => (
               <Route path="/taekwondo" element={<Taekwondo />} />
               <Route path="/kickboxing" element={<Kickboxing />} />
               <Route path="/my-account" element={<MyAccount />} />
+              <Route path="/callback" element={<Callback />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>

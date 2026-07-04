@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { motion } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
+import { savePendingMsisdn } from '../context/AuthContext';
 
 const COUNTRY_CODE = '+94';
 
@@ -28,6 +29,7 @@ export default function LoginModal({ onClose, onSuccess }: LoginModalProps) {
       if (result.success) {
         onSuccess();
       } else if (result.redirectURL) {
+        savePendingMsisdn(msisdn);
         window.location.href = result.redirectURL;
       } else {
         setError('Service not active. Please subscribe first.');

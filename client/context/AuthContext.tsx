@@ -1,9 +1,10 @@
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 const PID = 19;
 const BASE = '/api-proxy';
 const LOGIN_API = `${BASE}/prod/CPLogin/ULKM`;
 const UNSUB_API = `${BASE}/prod/ULKM/unsub`;
+const PENDING_MSISDN_KEY = 'kk_pending_msisdn';
 
 interface ActiveUser {
   msisdn: string;
@@ -32,6 +33,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const isActive = !!user;
 
+  useEffect(() => {
+    const pending = localStorage.getItem(PENDING_MSISDN_KEY);
+    if (pending && !user) {
+      login(pending).then((result) => {
+        if (result.success) localStorage.removeItem(PENDING_MSISDN_KEY);
+      });
+    }
+  }, []);
+
   const login = async (msisdn: string): Promise<{ success: boolean; redirectURL?: string }> => {
     const res = await fetch(`${LOGIN_API}?pid=${PID}&msisdn=${msisdn}`);
     const data = await res.json();
@@ -49,7 +59,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       localStorage.setItem('kk_user', JSON.stringify(activeUser));
       return { success: true };
     } else {
-      let redirectURL = `/api-proxy/prod/LP/landing?creatid=179&hash=LKMKK`;
+      let redirectURL = `/api-proxy/prod/LP/landing?creatid=179&hash=LKMKK&msisdn=${msisdn}`;
       return { success: false, redirectURL };
     }
   };
@@ -75,6 +85,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       {children}
     </AuthContext.Provider>
   );
+}
+
+export function savePendingMsisdn(msisdn: string) {
+  localStorage.setItem(PENDING_MSISDN_KEY, msisdn);
 }
 
 export function useAuth() {
