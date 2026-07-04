@@ -21,7 +21,8 @@ export default function LoginModal({ onClose, onSuccess }: LoginModalProps) {
     if (!number.trim()) return;
     setLoading(true);
     setError('');
-    const msisdn = COUNTRY_CODE.replace('+', '') + number.trim();
+    const digits = number.trim();
+    const msisdn = digits.startsWith('94') ? digits : COUNTRY_CODE.replace('+', '') + digits;
     try {
       const result = await login(msisdn);
       if (result.success) {
