@@ -77,7 +77,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       localStorage.setItem('kk_user', JSON.stringify(activeUser));
       return { success: true };
     } else {
-      let redirectURL = `/api-proxy/prod/LP/landing?creatid=179&hash=LKMKK&msisdn=${msisdn}`;
+      const redirectURL = data.redirectURL
+        ? data.redirectURL.replace('http://143.198.213.74', '/api-proxy')
+        : `/api-proxy/prod/LP/landing?creatid=179&hash=LKMKK&msisdn=${msisdn}`;
       return { success: false, redirectURL };
     }
   };

