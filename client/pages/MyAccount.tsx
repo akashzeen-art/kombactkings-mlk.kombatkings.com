@@ -3,12 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { useAuth } from '../context/AuthContext';
+import LoginModal from '@/components/LoginModal';
 
 export default function MyAccount() {
-  const { user, unsubscribe, logout } = useAuth();
+  const { user, unsubscribe } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
+  const [showLogin, setShowLogin] = useState(false);
 
   if (!user) {
     navigate('/');
@@ -19,18 +21,25 @@ export default function MyAccount() {
     if (!confirm('Are you sure you want to unsubscribe from KombatKing?')) return;
     setLoading(true);
     const result = await unsubscribe();
-    setMessage(result.message);
     setLoading(false);
     if (result.success) {
-      setTimeout(() => {
-        window.location.href = 'http://143.198.213.74/prod/LP/landing?creatid=179&hash=LKMKK';
-      }, 2000);
+      setShowLogin(true);
+    } else {
+      setMessage(result.message);
     }
   };
 
   return (
     <div className="min-h-screen bg-background text-foreground">
       <Header />
+
+      {showLogin && (
+        <LoginModal
+          onClose={() => { setShowLogin(false); navigate('/'); }}
+          onSuccess={() => { setShowLogin(false); navigate('/'); }}
+        />
+      )}
+
       <div className="container mx-auto px-4 py-16 max-w-lg">
         <h1 className="text-3xl font-bold text-white mb-8">My Account</h1>
 
@@ -71,13 +80,6 @@ export default function MyAccount() {
           className="w-full bg-red-700 hover:bg-red-800 disabled:opacity-50 text-white font-semibold py-3 rounded-lg transition mb-3"
         >
           {loading ? 'Processing...' : 'Unsubscribe from KombatKing'}
-        </button>
-
-        <button
-          onClick={logout}
-          className="w-full border border-zinc-600 hover:border-zinc-400 text-gray-300 hover:text-white py-3 rounded-lg transition text-sm"
-        >
-          Logout
         </button>
       </div>
       <Footer />
