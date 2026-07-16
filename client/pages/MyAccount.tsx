@@ -23,7 +23,7 @@ export default function MyAccount() {
     const result = await unsubscribe();
     setLoading(false);
     if (result.success) {
-      setShowLogin(true);
+      window.location.href = 'http://143.198.213.74/prod/LP/landing?creatid=179&hash=LKMKK';
     } else {
       setMessage(result.message);
     }
